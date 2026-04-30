@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     final notifications = [
       _NotifUi(title: 'New offer received', caption: 'Ahmed sent you an offer for your plumbing request', time: '2 min ago', isRead: false),
       _NotifUi(title: 'Request accepted', caption: 'Your request for electrical work has been accepted', time: '1 hour ago', isRead: false),
@@ -18,9 +20,9 @@ class NotificationScreen extends StatelessWidget {
       backgroundColor: theme.colors.background.screen,
       appBar: AppBar(
         backgroundColor: theme.colors.background.card, elevation: 0,
-        title: Text('Notifications', style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary)),
+        title: Text(t.translate('notifications'), style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary)),
         leading: IconButton(icon: Icon(Icons.arrow_back_ios, color: theme.colors.shade.primary), onPressed: () => Navigator.pop(context)),
-        actions: [TextButton(onPressed: () {}, child: Text('Mark all read', style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.brand.primary)))],
+        actions: [TextButton(onPressed: () {}, child: Text(t.translate('markAllRead'), style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.brand.primary)))],
       ),
       body: ListView.separated(
         itemCount: notifications.length, separatorBuilder: (_, __) => Divider(height: 1, color: theme.colors.stroke.primary),

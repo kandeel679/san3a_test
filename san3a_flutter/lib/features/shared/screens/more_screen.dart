@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class MoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
     final appState = AppStateProvider.of(context);
+    final t = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
@@ -24,21 +26,33 @@ class MoreScreen extends StatelessWidget {
           Icon(Icons.edit_outlined, color: theme.colors.shade.secondary),
         ])),
         const SizedBox(height: 16),
-        _Section(theme: theme, title: 'Account', items: [
-          _MenuItem(icon: Icons.person_outline, title: 'Profile Settings', onTap: () {}),
-          if (!appState.isProvider) _MenuItem(icon: Icons.handyman, title: 'Become a Craftsman', onTap: () => context.go('/account_setup')),
-          if (appState.isProvider) _MenuItem(icon: Icons.build_outlined, title: 'My Services', onTap: () {}),
-          if (appState.isProvider) _MenuItem(icon: Icons.location_on_outlined, title: 'My Location', onTap: () {}),
+        _Section(theme: theme, title: t.translate('account'), items: [
+          _MenuItem(icon: Icons.person_outline, title: t.translate('profileSettings'), onTap: () {}),
+          if (!appState.isProvider) _MenuItem(icon: Icons.handyman, title: t.translate('becomeACraftsman'), onTap: () => context.go('/account_setup')),
+          if (appState.isProvider) _MenuItem(icon: Icons.build_outlined, title: t.translate('myServices'), onTap: () {}),
+          if (appState.isProvider) _MenuItem(icon: Icons.location_on_outlined, title: t.translate('myLocation'), onTap: () {}),
         ]),
         const SizedBox(height: 16),
-        _Section(theme: theme, title: 'Preferences', items: [
-          _MenuItem(icon: Icons.language, title: 'Language', trailing: 'English', onTap: () {}),
-          _MenuSwitch(icon: Icons.dark_mode_outlined, title: 'Dark Mode', value: appState.isDark, onChanged: (v) => appState.toggleDarkMode()),
+        _Section(theme: theme, title: t.translate('preferences'), items: [
+          _MenuItem(
+            icon: Icons.language,
+            title: t.translate('language'),
+            trailing: appState.isArabic ? t.translate('arabic') : t.translate('english'),
+            onTap: () {
+              // Toggle language
+              if (appState.isArabic) {
+                appState.setLocale(const Locale('en'));
+              } else {
+                appState.setLocale(const Locale('ar'));
+              }
+            },
+          ),
+          _MenuSwitch(icon: Icons.dark_mode_outlined, title: t.translate('darkMode'), value: appState.isDark, onChanged: (v) => appState.toggleDarkMode()),
         ]),
         const SizedBox(height: 16),
-        _Section(theme: theme, title: 'Support', items: [
-          _MenuItem(icon: Icons.help_outline, title: 'Help Center', onTap: () {}),
-          _MenuItem(icon: Icons.info_outline, title: 'About San3a', onTap: () {}),
+        _Section(theme: theme, title: t.translate('support'), items: [
+          _MenuItem(icon: Icons.help_outline, title: t.translate('helpCenter'), onTap: () {}),
+          _MenuItem(icon: Icons.info_outline, title: t.translate('aboutSan3a'), onTap: () {}),
         ]),
         const SizedBox(height: 16),
         Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: GestureDetector(
@@ -49,7 +63,7 @@ class MoreScreen extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(Icons.logout, color: theme.colors.additional.primary.error),
               const SizedBox(width: 8),
-              Text('Log Out', style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.additional.primary.error)),
+              Text(t.translate('logOut'), style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.additional.primary.error)),
             ]),
           ),
         )),

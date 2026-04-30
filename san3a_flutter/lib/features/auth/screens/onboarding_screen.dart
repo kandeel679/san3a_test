@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/shared_widgets.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 /// Mirrors OnBoardingScreen.kt
 class OnboardingScreen extends StatefulWidget {
@@ -16,27 +17,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static const _pages = [
-    _OnboardingPage(
-      icon: Icons.search,
-      title: 'Find the Right Service',
-      description: 'Browse services from verified craftsmen in your area. From plumbing to painting, we\'ve got you covered.',
-    ),
-    _OnboardingPage(
-      icon: Icons.handshake,
-      title: 'Get Competitive Offers',
-      description: 'Receive multiple offers from skilled professionals. Compare prices and choose the best one for you.',
-    ),
-    _OnboardingPage(
-      icon: Icons.star,
-      title: 'Quality Guaranteed',
-      description: 'Rate your experience and help build a trusted community of service providers.',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
+
+    final pages = [
+      _OnboardingPage(
+        icon: Icons.search,
+        title: t.translate('onboardingTitle1'),
+        description: t.translate('onboardingDesc1'),
+      ),
+      _OnboardingPage(
+        icon: Icons.handshake,
+        title: t.translate('onboardingTitle2'),
+        description: t.translate('onboardingDesc2'),
+      ),
+      _OnboardingPage(
+        icon: Icons.star,
+        title: t.translate('onboardingTitle3'),
+        description: t.translate('onboardingDesc3'),
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
       body: SafeArea(
@@ -44,11 +47,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             // Skip button
             Align(
-              alignment: Alignment.topRight,
+              alignment: AlignmentDirectional.topEnd,
               child: TextButton(
                 onPressed: _onFinish,
                 child: Text(
-                  'Skip',
+                  t.translate('skip'),
                   style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.brand.primary),
                 ),
               ),
@@ -57,10 +60,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _pages.length,
+                itemCount: pages.length,
                 onPageChanged: (i) => setState(() => _currentPage = i),
                 itemBuilder: (_, i) {
-                  final page = _pages[i];
+                  final page = pages[i];
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
@@ -96,7 +99,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _pages.length,
+                pages.length,
                 (i) => AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -114,9 +117,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: AppButton(
-                text: _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                text: _currentPage == pages.length - 1 ? t.translate('getStarted') : t.translate('next'),
                 onPressed: () {
-                  if (_currentPage < _pages.length - 1) {
+                  if (_currentPage < pages.length - 1) {
                     _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                   } else {
                     _onFinish();

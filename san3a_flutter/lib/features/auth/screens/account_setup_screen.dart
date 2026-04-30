@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/shared_widgets.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 import '../../../data/models/user_model.dart';
 
 /// Mirrors AccountScreen.kt — 7-step multi-step setup wizard
@@ -23,21 +24,21 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   final _nameController = TextEditingController();
   final _workDescController = TextEditingController();
 
-  // Available services categories
-  static const _services = [
-    {'id': 'plumbing', 'title': 'Plumbing', 'icon': Icons.plumbing},
-    {'id': 'electrical', 'title': 'Electrical', 'icon': Icons.electrical_services},
-    {'id': 'painting', 'title': 'Painting', 'icon': Icons.format_paint},
-    {'id': 'tiling', 'title': 'Tiling', 'icon': Icons.grid_on},
-    {'id': 'locksmith', 'title': 'Locksmith', 'icon': Icons.lock},
-    {'id': 'appliance', 'title': 'Appliance Repair', 'icon': Icons.kitchen},
+  // Available services categories — keys used for localization
+  static const _serviceKeys = [
+    {'id': 'plumbing', 'titleKey': 'plumbing', 'icon': Icons.plumbing},
+    {'id': 'electrical', 'titleKey': 'electrical', 'icon': Icons.electrical_services},
+    {'id': 'painting', 'titleKey': 'painting', 'icon': Icons.format_paint},
+    {'id': 'tiling', 'titleKey': 'tiling', 'icon': Icons.grid_on},
+    {'id': 'locksmith', 'titleKey': 'locksmith', 'icon': Icons.lock},
+    {'id': 'appliance', 'titleKey': 'applianceRepair', 'icon': Icons.kitchen},
   ];
 
-  static const _governorates = [
-    {'id': 1, 'name': 'Cairo'},
-    {'id': 2, 'name': 'Giza'},
-    {'id': 3, 'name': 'Alexandria'},
-    {'id': 4, 'name': 'Qalyubia'},
+  static const _governorateKeys = [
+    {'id': 1, 'nameKey': 'cairo'},
+    {'id': 2, 'nameKey': 'giza'},
+    {'id': 3, 'nameKey': 'alexandria'},
+    {'id': 4, 'nameKey': 'qalyubia'},
   ];
 
   static const _cities = {
@@ -47,14 +48,14 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     4: [{'id': 9, 'name': 'Shubra El Kheima'}, {'id': 10, 'name': 'Qalyub'}],
   };
 
-  final _stepTitles = [
-    'Account Type',
-    'Select Services',
-    'Your Location',
-    'Personal Info',
-    'Showcase Your Work',
-    'Upload National ID',
-    'All Done!',
+  List<String> _stepTitles(AppLocalizations t) => [
+    t.translate('accountType'),
+    t.translate('selectServices'),
+    t.translate('yourLocation'),
+    t.translate('personalInfo'),
+    t.translate('showcaseWork'),
+    t.translate('uploadNationalId'),
+    t.translate('allDone'),
   ];
 
   bool get _canProceed {
@@ -98,6 +99,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
+    final titles = _stepTitles(t);
+
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
       appBar: _currentStep > 0 && _currentStep < 6
@@ -108,7 +112,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                 icon: Icon(Icons.arrow_back_ios, color: theme.colors.shade.primary),
                 onPressed: _previousStep,
               ),
-              title: Text(_stepTitles[_currentStep], style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary)),
+              title: Text(titles[_currentStep], style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary)),
               centerTitle: true,
             )
           : null,
@@ -126,12 +130,12 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                 minHeight: 6,
               ),
             ),
-          Expanded(child: _buildStepContent(theme)),
+          Expanded(child: _buildStepContent(theme, t)),
           // Bottom button
           Padding(
             padding: const EdgeInsets.all(24),
             child: AppButton(
-              text: _currentStep == 6 ? 'Start Using San3a' : 'Next',
+              text: _currentStep == 6 ? t.translate('startUsingSan3a') : t.translate('next'),
               state: _canProceed ? AppButtonState.enable : AppButtonState.disable,
               onPressed: _canProceed ? _nextStep : null,
             ),
@@ -141,34 +145,34 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     );
   }
 
-  Widget _buildStepContent(San3aTheme theme) {
+  Widget _buildStepContent(San3aTheme theme, AppLocalizations t) {
     switch (_currentStep) {
-      case 0: return _buildAccountTypeStep(theme);
-      case 1: return _buildServicesStep(theme);
-      case 2: return _buildLocationStep(theme);
-      case 3: return _buildPersonalInfoStep(theme);
-      case 4: return _buildWorkShowcaseStep(theme);
-      case 5: return _buildNationalIdStep(theme);
-      case 6: return _buildCompletedStep(theme);
+      case 0: return _buildAccountTypeStep(theme, t);
+      case 1: return _buildServicesStep(theme, t);
+      case 2: return _buildLocationStep(theme, t);
+      case 3: return _buildPersonalInfoStep(theme, t);
+      case 4: return _buildWorkShowcaseStep(theme, t);
+      case 5: return _buildNationalIdStep(theme, t);
+      case 6: return _buildCompletedStep(theme, t);
       default: return const SizedBox();
     }
   }
 
-  Widget _buildAccountTypeStep(San3aTheme theme) {
+  Widget _buildAccountTypeStep(San3aTheme theme, AppLocalizations t) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 24),
-          Text('What type of account?', style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('whatAccountType'), style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
           const SizedBox(height: 8),
-          Text('Choose how you want to use San3a', style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
+          Text(t.translate('chooseHowToUse'), style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
           const SizedBox(height: 32),
           _AccountTypeCard(
             icon: Icons.person,
-            title: 'Customer',
-            description: 'I need to hire service providers',
+            title: t.translate('customer'),
+            description: t.translate('customerDesc'),
             isSelected: _selectedAccountType == AccountType.customer,
             onTap: () => setState(() => _selectedAccountType = AccountType.customer),
             theme: theme,
@@ -176,8 +180,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
           const SizedBox(height: 16),
           _AccountTypeCard(
             icon: Icons.handyman,
-            title: 'Craftsman',
-            description: 'I provide services and want to get jobs',
+            title: t.translate('craftsman'),
+            description: t.translate('craftsmanDesc'),
             isSelected: _selectedAccountType == AccountType.craftsman,
             onTap: () => setState(() => _selectedAccountType = AccountType.craftsman),
             theme: theme,
@@ -187,7 +191,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     );
   }
 
-  Widget _buildServicesStep(San3aTheme theme) {
+  Widget _buildServicesStep(San3aTheme theme, AppLocalizations t) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -195,8 +199,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
         children: [
           Text(
             _selectedAccountType == AccountType.craftsman
-                ? 'What services do you offer?'
-                : 'What services are you looking for?',
+                ? t.translate('whatServicesOffer')
+                : t.translate('whatServicesLooking'),
             style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary),
           ),
           const SizedBox(height: 24),
@@ -206,7 +210,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 1.5,
-              children: _services.map((s) {
+              children: _serviceKeys.map((s) {
                 final id = s['id'] as String;
                 final isSelected = _selectedServices.contains(id);
                 return GestureDetector(
@@ -228,7 +232,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                       children: [
                         Icon(s['icon'] as IconData, size: 32, color: isSelected ? theme.colors.brand.primary : theme.colors.shade.secondary),
                         const SizedBox(height: 8),
-                        Text(s['title'] as String, style: theme.textStyle.bodyMediumMedium.copyWith(color: isSelected ? theme.colors.brand.primary : theme.colors.shade.primary)),
+                        Text(t.translate(s['titleKey'] as String), style: theme.textStyle.bodyMediumMedium.copyWith(color: isSelected ? theme.colors.brand.primary : theme.colors.shade.primary)),
                       ],
                     ),
                   ),
@@ -241,30 +245,30 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     );
   }
 
-  Widget _buildLocationStep(San3aTheme theme) {
+  Widget _buildLocationStep(San3aTheme theme, AppLocalizations t) {
     final cities = _selectedGovernorateId != null ? (_cities[_selectedGovernorateId] ?? []) : [];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Where are you located?', style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('whereLocated'), style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
           const SizedBox(height: 24),
           DropdownButtonFormField<int>(
             decoration: InputDecoration(
-              labelText: 'Governorate',
+              labelText: t.translate('governorate'),
               filled: true,
               fillColor: theme.colors.background.card,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(theme.radius.large)),
             ),
             value: _selectedGovernorateId,
-            items: _governorates.map((g) => DropdownMenuItem(value: g['id'] as int, child: Text(g['name'] as String))).toList(),
+            items: _governorateKeys.map((g) => DropdownMenuItem(value: g['id'] as int, child: Text(t.translate(g['nameKey'] as String)))).toList(),
             onChanged: (v) => setState(() { _selectedGovernorateId = v; _selectedCityId = null; }),
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<int>(
             decoration: InputDecoration(
-              labelText: 'City',
+              labelText: t.translate('city'),
               filled: true,
               fillColor: theme.colors.background.card,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(theme.radius.large)),
@@ -274,19 +278,19 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             onChanged: (v) => setState(() => _selectedCityId = v),
           ),
           const SizedBox(height: 16),
-          AppTextField(label: 'Address Details', hint: 'Building, street, etc.', controller: _addressController, onChanged: (_) => setState(() {})),
+          AppTextField(label: t.translate('addressDetails'), hint: t.translate('addressHint'), controller: _addressController, onChanged: (_) => setState(() {})),
         ],
       ),
     );
   }
 
-  Widget _buildPersonalInfoStep(San3aTheme theme) {
+  Widget _buildPersonalInfoStep(San3aTheme theme, AppLocalizations t) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Personal Information', style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('personalInformation'), style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
           const SizedBox(height: 24),
           Center(
             child: Stack(
@@ -304,21 +308,21 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          AppTextField(label: 'Full Name', controller: _nameController, onChanged: (_) => setState(() {})),
+          AppTextField(label: t.translate('fullName'), controller: _nameController, onChanged: (_) => setState(() {})),
         ],
       ),
     );
   }
 
-  Widget _buildWorkShowcaseStep(San3aTheme theme) {
+  Widget _buildWorkShowcaseStep(San3aTheme theme, AppLocalizations t) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Showcase Your Work', style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('showcaseYourWork'), style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
           const SizedBox(height: 8),
-          Text('Add photos and describe your expertise (optional)', style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
+          Text(t.translate('addPhotosDesc'), style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
           const SizedBox(height: 24),
           Container(
             height: 160,
@@ -333,37 +337,37 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                 children: [
                   Icon(Icons.add_photo_alternate, size: 48, color: theme.colors.shade.tertiary),
                   const SizedBox(height: 8),
-                  Text('Add Photos', style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.shade.tertiary)),
+                  Text(t.translate('addPhotos'), style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.shade.tertiary)),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
-          AppTextField(label: 'Work Description', hint: 'Describe your experience and skills', controller: _workDescController, maxLines: 4),
+          AppTextField(label: t.translate('workDescription'), hint: t.translate('workDescHint'), controller: _workDescController, maxLines: 4),
         ],
       ),
     );
   }
 
-  Widget _buildNationalIdStep(San3aTheme theme) {
+  Widget _buildNationalIdStep(San3aTheme theme, AppLocalizations t) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Verify Your Identity', style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('verifyIdentity'), style: theme.textStyle.titleLarge.copyWith(color: theme.colors.shade.primary)),
           const SizedBox(height: 8),
-          Text('Upload your national ID for verification (optional)', style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
+          Text(t.translate('uploadIdDesc'), style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary)),
           const SizedBox(height: 24),
-          _IdUploadCard(label: 'National ID Front', theme: theme),
+          _IdUploadCard(label: t.translate('nationalIdFront'), theme: theme),
           const SizedBox(height: 16),
-          _IdUploadCard(label: 'National ID Back', theme: theme),
+          _IdUploadCard(label: t.translate('nationalIdBack'), theme: theme),
         ],
       ),
     );
   }
 
-  Widget _buildCompletedStep(San3aTheme theme) {
+  Widget _buildCompletedStep(San3aTheme theme, AppLocalizations t) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
@@ -379,10 +383,10 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
               child: Icon(Icons.check, size: 60, color: theme.colors.additional.primary.success),
             ),
             const SizedBox(height: 32),
-            Text('You\'re All Set!', style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
+            Text(t.translate('youreAllSet'), style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
             const SizedBox(height: 16),
             Text(
-              'Your account has been created successfully. Start exploring San3a!',
+              t.translate('accountCreated'),
               style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary),
               textAlign: TextAlign.center,
             ),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/shared_widgets.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 /// Mirrors RegisterScreen.kt
 class RegisterScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
       body: SafeArea(
@@ -47,37 +49,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const SizedBox(height: 40),
                 Text(
-                  'Welcome to San3a',
+                  t.translate('welcomeToSan3a'),
                   style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Enter your phone number to get started',
+                  t.translate('enterPhoneToStart'),
                   style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary),
                 ),
                 const SizedBox(height: 40),
                 AppTextField(
-                  label: 'Phone Number',
-                  hint: '+20 1XX XXX XXXX',
+                  label: t.translate('phoneNumber'),
+                  hint: t.translate('phoneHint'),
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   prefix: const Icon(Icons.phone_outlined),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Phone number is required';
-                    if (value.length < 10) return 'Invalid phone number';
+                    if (value == null || value.isEmpty) return t.translate('phoneRequired');
+                    if (value.length < 10) return t.translate('invalidPhone');
                     return null;
                   },
                 ),
                 const SizedBox(height: 24),
                 AppButton(
-                  text: 'Send OTP',
+                  text: t.translate('sendOtp'),
                   state: _buttonState,
                   onPressed: _sendOtp,
                 ),
                 const Spacer(),
                 Center(
                   child: Text(
-                    'By continuing, you agree to our Terms of Service',
+                    t.translate('termsNotice'),
                     style: theme.textStyle.bodySmallRegular.copyWith(color: theme.colors.shade.tertiary),
                     textAlign: TextAlign.center,
                   ),
@@ -127,6 +129,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
       appBar: AppBar(
@@ -142,10 +145,10 @@ class _OtpScreenState extends State<OtpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Verification', style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
+            Text(t.translate('verification'), style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
             const SizedBox(height: 8),
             Text(
-              'Enter the 4-digit code sent to ${widget.phone}',
+              '${t.translate('enterOtpCode')} ${widget.phone}',
               style: theme.textStyle.bodyMediumRegular.copyWith(color: theme.colors.shade.secondary),
             ),
             const SizedBox(height: 40),
@@ -187,12 +190,12 @@ class _OtpScreenState extends State<OtpScreen> {
               }),
             ),
             const SizedBox(height: 40),
-            AppButton(text: 'Verify', state: _buttonState, onPressed: _verifyOtp),
+            AppButton(text: t.translate('verify'), state: _buttonState, onPressed: _verifyOtp),
             const SizedBox(height: 24),
             Center(
               child: TextButton(
                 onPressed: () {},
-                child: Text('Resend Code', style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.brand.primary)),
+                child: Text(t.translate('resendCode'), style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.brand.primary)),
               ),
             ),
           ],

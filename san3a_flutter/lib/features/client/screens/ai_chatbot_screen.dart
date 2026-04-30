@@ -3,6 +3,7 @@ import '../../../data/repositories/ai_repository.dart';
 import '../../../data/sources/remote/api_client.dart';
 import '../../../data/models/chat_message_model.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class AiChatbotScreen extends StatefulWidget {
   const AiChatbotScreen({Key? key}) : super(key: key);
@@ -18,19 +19,24 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
   
   final List<ChatMessageModel> _messages = [];
   bool _isLoading = false;
+  bool _initialized = false;
 
   @override
-  void initState() {
-    super.initState();
-    _messages.add(
-      ChatMessageModel(
-        chatId: 'ai_session',
-        senderId: 'ai',
-        receiverId: 'user',
-        text: 'Hello! I am the San3a AI assistant. How can I help you find the right service today?',
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-      )
-    );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final t = AppLocalizations.of(context);
+      _messages.add(
+        ChatMessageModel(
+          chatId: 'ai_session',
+          senderId: 'ai',
+          receiverId: 'user',
+          text: t.translate('aiGreeting'),
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+        )
+      );
+      _initialized = true;
+    }
   }
 
   void _sendMessage() async {
@@ -83,8 +89,9 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('AI Assistant')),
+      appBar: AppBar(title: Text(t.translate('aiAssistant'))),
       body: Column(
         children: [
           Expanded(
@@ -118,13 +125,13 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
               padding: EdgeInsets.all(8.0),
               child: CircularProgressIndicator(),
             ),
-          _buildMessageInput(),
+          _buildMessageInput(t),
         ],
       ),
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageInput(AppLocalizations t) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       color: Colors.white,
@@ -135,7 +142,7 @@ class _AiChatbotScreenState extends State<AiChatbotScreen> {
               child: TextField(
                 controller: _messageController,
                 decoration: InputDecoration(
-                  hintText: 'Type a message...',
+                  hintText: t.translate('typeMessageDots'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),

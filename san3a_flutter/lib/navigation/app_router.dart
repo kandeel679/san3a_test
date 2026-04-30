@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../core/utils/app_state.dart';
 import '../core/theme/app_theme.dart';
+import '../core/l10n/app_localizations.dart';
 // Auth screens
 import '../features/auth/screens/splash_screen.dart';
 import '../features/auth/screens/onboarding_screen.dart';
@@ -31,6 +32,7 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     final prefix = widget.isProvider ? '/craftsman' : '/customer';
 
     return Scaffold(
@@ -46,10 +48,10 @@ class _MainShellState extends State<MainShell> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home', isActive: _currentIndex == 0, theme: theme, onTap: () { setState(() => _currentIndex = 0); context.go(prefix); }),
-                _NavItem(icon: Icons.list_alt_outlined, activeIcon: Icons.list_alt, label: widget.isProvider ? 'Jobs' : 'Requests', isActive: _currentIndex == 1, theme: theme, onTap: () { setState(() => _currentIndex = 1); context.go('$prefix/requests'); }),
-                _NavItem(icon: Icons.chat_bubble_outline, activeIcon: Icons.chat_bubble, label: 'Messages', isActive: _currentIndex == 2, theme: theme, onTap: () { setState(() => _currentIndex = 2); context.go('$prefix/messages'); }),
-                _NavItem(icon: Icons.more_horiz, activeIcon: Icons.more_horiz, label: 'More', isActive: _currentIndex == 3, theme: theme, onTap: () { setState(() => _currentIndex = 3); context.go('$prefix/more'); }),
+                _NavItem(icon: Icons.home_outlined, activeIcon: Icons.home, label: t.translate('home'), isActive: _currentIndex == 0, theme: theme, onTap: () { setState(() => _currentIndex = 0); context.go(prefix); }),
+                _NavItem(icon: Icons.list_alt_outlined, activeIcon: Icons.list_alt, label: widget.isProvider ? t.translate('jobs') : t.translate('requests'), isActive: _currentIndex == 1, theme: theme, onTap: () { setState(() => _currentIndex = 1); context.go('$prefix/requests'); }),
+                _NavItem(icon: Icons.chat_bubble_outline, activeIcon: Icons.chat_bubble, label: t.translate('messages'), isActive: _currentIndex == 2, theme: theme, onTap: () { setState(() => _currentIndex = 2); context.go('$prefix/messages'); }),
+                _NavItem(icon: Icons.more_horiz, activeIcon: Icons.more_horiz, label: t.translate('more'), isActive: _currentIndex == 3, theme: theme, onTap: () { setState(() => _currentIndex = 3); context.go('$prefix/more'); }),
               ],
             ),
           ),

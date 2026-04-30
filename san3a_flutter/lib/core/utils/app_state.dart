@@ -12,6 +12,10 @@ class AppState extends ChangeNotifier {
   bool isOnboardingDone = false;
   bool isDark = false;
 
+  // Locale state
+  Locale _locale = const Locale('en');
+  Locale get locale => _locale;
+
   bool get isAuthenticated => savedPhone != null && currentSetupStep == 'COMPLETED';
   bool get isClient => _accountType == AccountType.customer;
   bool get isProvider => _accountType == AccountType.craftsman;
@@ -45,6 +49,13 @@ class AppState extends ChangeNotifier {
     currentSetupStep = null;
     notifyListeners();
   }
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+    notifyListeners();
+  }
+
+  bool get isArabic => _locale.languageCode == 'ar';
 }
 
 class AppStateProvider extends InheritedNotifier<AppState> {

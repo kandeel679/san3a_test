@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.8
   
   # Backend & APIs
@@ -34,7 +36,7 @@ dependencies:
   # UI & Assets
   flutter_svg: ^2.0.10
   cached_network_image: ^3.4.1
-  intl: ^0.19.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

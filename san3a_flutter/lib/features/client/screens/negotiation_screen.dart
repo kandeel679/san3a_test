@@ -3,6 +3,7 @@ import '../../../data/repositories/ai_repository.dart';
 import '../../../data/sources/remote/api_client.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class NegotiationScreen extends StatefulWidget {
   final String requestId;
@@ -37,25 +38,26 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('AI Negotiation')),
+      appBar: AppBar(title: Text(t.translate('aiNegotiation'))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Current Provider Offer:',
-              style: TextStyle(fontSize: 16),
+            Text(
+              t.translate('currentProviderOffer'),
+              style: const TextStyle(fontSize: 16),
             ),
             Text(
               'EGP ${widget.currentOffer}',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
-            const Text('Enter your target price:'),
+            Text(t.translate('enterTargetPrice')),
             CustomTextField(
-              label: 'Target Price (EGP)',
+              label: t.translate('targetPrice'),
               controller: _targetPriceController,
               keyboardType: TextInputType.number,
             ),
@@ -67,7 +69,7 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
                 color: Colors.green[50],
                 child: Column(
                   children: [
-                    const Text('AI Counter Offer:'),
+                    Text(t.translate('aiCounterOffer')),
                     Text(
                       'EGP $_counterOffer',
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
@@ -77,9 +79,9 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
               ),
               const SizedBox(height: 16),
               CustomButton(
-                text: 'Accept Offer',
+                text: t.translate('acceptOffer'),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Offer Accepted!')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.translate('offerAccepted'))));
                   Navigator.of(context).pop();
                 },
               ),
@@ -87,7 +89,7 @@ class _NegotiationScreenState extends State<NegotiationScreen> {
             ],
 
             CustomButton(
-              text: 'Let AI Negotiate',
+              text: t.translate('letAiNegotiate'),
               isLoading: _isNegotiating,
               onPressed: _negotiate,
             ),

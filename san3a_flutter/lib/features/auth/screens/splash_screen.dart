@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 /// Mirrors SplashScreen.kt
 class SplashScreen extends StatefulWidget {
@@ -56,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: theme.colors.brand.primary,
       body: Center(
@@ -67,12 +69,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               Icon(Icons.handyman, size: 80, color: Colors.white),
               const SizedBox(height: 16),
               Text(
-                'صنعة',
+                t.translate('san3aArabic'),
                 style: theme.textStyle.displayXLarge.copyWith(color: Colors.white, fontSize: 48),
               ),
               const SizedBox(height: 8),
               Text(
-                'San3a',
+                t.translate('appName'),
                 style: theme.textStyle.titleLarge.copyWith(color: Colors.white.withOpacity(0.8)),
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({Key? key}) : super(key: key);
@@ -7,6 +8,7 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     final chats = [
       _ChatUi(name: 'Ahmed Hassan', lastMsg: 'I can fix your plumbing issue', time: '2:30 PM', unread: 2),
       _ChatUi(name: 'Mohamed Ali', lastMsg: 'When should I come?', time: '1:15 PM', unread: 0),
@@ -18,13 +20,13 @@ class MessagesScreen extends StatelessWidget {
       backgroundColor: theme.colors.background.screen,
       body: SafeArea(child: Column(children: [
         Container(color: theme.colors.background.card, padding: const EdgeInsets.all(16), child: Row(children: [
-          Text('Messages', style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
+          Text(t.translate('messages'), style: theme.textStyle.titleXLarge.copyWith(color: theme.colors.shade.primary)),
         ])),
         Expanded(child: chats.isEmpty
           ? Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(Icons.chat_bubble_outline, size: 64, color: theme.colors.shade.tertiary),
               const SizedBox(height: 16),
-              Text('No messages yet', style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.secondary)),
+              Text(t.translate('noMessagesYet'), style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.secondary)),
             ]))
           : ListView.separated(
               itemCount: chats.length, separatorBuilder: (_, __) => Divider(height: 1, color: theme.colors.stroke.primary),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/shared_widgets.dart';
 import '../../../core/utils/app_state.dart';
+import '../../../core/l10n/app_localizations.dart';
 import '../../../data/models/service_model.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
@@ -48,10 +49,11 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
     final appState = AppStateProvider.of(context);
+    final t = AppLocalizations.of(context);
     if (_isLoading) return Scaffold(backgroundColor: theme.colors.background.screen, body: Center(child: CircularProgressIndicator(color: theme.colors.brand.primary)));
 
     final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+    final greeting = hour < 12 ? t.translate('goodMorning') : hour < 17 ? t.translate('goodAfternoon') : t.translate('goodEvening');
 
     return Scaffold(
       backgroundColor: theme.colors.background.screen,
@@ -60,7 +62,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('$greeting, ${appState.fullName ?? "User"}', style: theme.textStyle.bodyMediumMedium.copyWith(color: theme.colors.shade.primary)),
             const SizedBox(height: 4),
-            Row(children: [Icon(Icons.location_on_outlined, size: 16, color: theme.colors.shade.secondary), const SizedBox(width: 4), Text('Cairo, Egypt', style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.shade.secondary))]),
+            Row(children: [Icon(Icons.location_on_outlined, size: 16, color: theme.colors.shade.secondary), const SizedBox(width: 4), Text('${t.translate('cairo')}, Egypt', style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.shade.secondary))]),
           ])),
           GestureDetector(onTap: () => context.push('/notifications'), child: Stack(children: [
             Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: theme.colors.background.screen, shape: BoxShape.circle), child: Icon(Icons.notifications_outlined, color: theme.colors.shade.primary)),
@@ -69,10 +71,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         ])),
         Expanded(child: ListView(children: [
           const SizedBox(height: 16),
-          AppSearchBar(value: _searchQuery, onValueChange: (v) => setState(() => _searchQuery = v), hint: 'Search for a service...'),
+          AppSearchBar(value: _searchQuery, onValueChange: (v) => setState(() => _searchQuery = v), hint: t.translate('searchService')),
           const SizedBox(height: 24),
           if (_searchQuery.isEmpty) ...[
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text('Most Requested', style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary))),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(t.translate('mostRequested'), style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary))),
             const SizedBox(height: 12),
             SizedBox(height: 100, child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16), scrollDirection: Axis.horizontal, itemCount: 3, separatorBuilder: (_, __) => const SizedBox(width: 12),
@@ -85,11 +87,11 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             )),
             const SizedBox(height: 24),
           ],
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(_searchQuery.isEmpty ? 'Find What You Need' : 'Results', style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary))),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(_searchQuery.isEmpty ? t.translate('findWhatYouNeed') : t.translate('results'), style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.primary))),
           const SizedBox(height: 12),
-          if (_filtered.isEmpty) Padding(padding: const EdgeInsets.all(40), child: Column(children: [Icon(Icons.search_off, size: 64, color: theme.colors.shade.tertiary), const SizedBox(height: 16), Text('No results found', style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.secondary))]))
+          if (_filtered.isEmpty) Padding(padding: const EdgeInsets.all(40), child: Column(children: [Icon(Icons.search_off, size: 64, color: theme.colors.shade.tertiary), const SizedBox(height: 16), Text(t.translate('noResults'), style: theme.textStyle.titleSmall.copyWith(color: theme.colors.shade.secondary))]))
           else ...(_filtered.map((s) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), child: CategoryItem(title: s.title, description: s.description, serviceImageUrl: s.imageUrl, onTap: () => _openRequest(s))))),
-          if (_searchQuery.isEmpty) Padding(padding: const EdgeInsets.all(16), child: AdCard(title: 'Got a Skill? Start Earning!', caption: 'Create your craftsman account and get job requests', buttonTitle: 'Become a Craftsman')),
+          if (_searchQuery.isEmpty) Padding(padding: const EdgeInsets.all(16), child: AdCard(title: t.translate('adTitle'), caption: t.translate('adCaption'), buttonTitle: t.translate('becomeACraftsman'))),
           const SizedBox(height: 24),
         ])),
       ])),
@@ -112,6 +114,7 @@ class _RequestSheetState extends State<_RequestSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = San3aTheme.of(context);
+    final t = AppLocalizations.of(context);
     return Container(
       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
       decoration: BoxDecoration(color: theme.colors.background.bottomSheet, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
@@ -126,17 +129,17 @@ class _RequestSheetState extends State<_RequestSheet> {
         const SizedBox(height: 16),
         Flexible(child: SingleChildScrollView(padding: const EdgeInsets.symmetric(horizontal: 16), child: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('What do you need help with?', style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16),
+            Text(t.translate('whatNeedHelp'), style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16),
             Wrap(spacing: 8, runSpacing: 8, children: widget.service.suggestions.map((s) => AppChip(label: s, isSelected: _title == s, onTap: () => setState(() => _title = s))).toList()),
             const SizedBox(height: 16), AppTextField(hint: widget.service.hint, onChanged: (v) => setState(() => _title = v)),
           ]),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Describe the problem', style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), AppTextField(hint: 'Describe...', maxLines: 5, onChanged: (v) => setState(() => _desc = v))]),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Where are you?', style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), AppTextField(hint: 'Governorate'), const SizedBox(height: 12), AppTextField(hint: 'City'), const SizedBox(height: 12), AppTextField(hint: 'Address')]),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Add photos (optional)', style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), Container(height: 140, decoration: BoxDecoration(color: theme.colors.background.bottomSheetCard, borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colors.stroke.primary)), child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.camera_alt_outlined, size: 40, color: theme.colors.shade.tertiary), const SizedBox(height: 8), Text('Tap to add photos', style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.shade.tertiary))])))]),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t.translate('describeProblem'), style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), AppTextField(hint: t.translate('describe'), maxLines: 5, onChanged: (v) => setState(() => _desc = v))]),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t.translate('whereAreYou'), style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), AppTextField(hint: t.translate('governorate')), const SizedBox(height: 12), AppTextField(hint: t.translate('city')), const SizedBox(height: 12), AppTextField(hint: t.translate('address'))]),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(t.translate('addPhotosOptional'), style: theme.textStyle.bodyLargeMedium.copyWith(color: theme.colors.shade.primary)), const SizedBox(height: 16), Container(height: 140, decoration: BoxDecoration(color: theme.colors.background.bottomSheetCard, borderRadius: BorderRadius.circular(16), border: Border.all(color: theme.colors.stroke.primary)), child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.camera_alt_outlined, size: 40, color: theme.colors.shade.tertiary), const SizedBox(height: 8), Text(t.translate('tapToAddPhotos'), style: theme.textStyle.bodySmallMedium.copyWith(color: theme.colors.shade.tertiary))])))]),
         ][_step])),
-        Padding(padding: const EdgeInsets.all(16), child: AppButton(text: _step == 3 ? 'Create Request' : 'Next', state: (_step == 0 && _title.isEmpty) || (_step == 1 && _desc.isEmpty) ? AppButtonState.disable : AppButtonState.enable, onPressed: () {
+        Padding(padding: const EdgeInsets.all(16), child: AppButton(text: _step == 3 ? t.translate('createRequest') : t.translate('next'), state: (_step == 0 && _title.isEmpty) || (_step == 1 && _desc.isEmpty) ? AppButtonState.disable : AppButtonState.enable, onPressed: () {
           if (_step < 3) setState(() => _step++);
-          else { Navigator.pop(context); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: const Text('Request created!'), backgroundColor: San3aTheme.of(context).colors.additional.primary.success)); }
+          else { Navigator.pop(context); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.translate('requestCreated')), backgroundColor: San3aTheme.of(context).colors.additional.primary.success)); }
         })),
       ]),
     );

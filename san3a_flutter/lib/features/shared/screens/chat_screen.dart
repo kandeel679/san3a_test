@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class ChatScreen extends StatelessWidget {
   final String chatId;
@@ -6,8 +7,9 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Chat')),
+      appBar: AppBar(title: Text(t.translate('chat'))),
       body: Column(
         children: [
           Expanded(
@@ -19,7 +21,7 @@ class ChatScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(hintText: 'Type a message'),
+                    decoration: InputDecoration(hintText: t.translate('typeMessage')),
                   ),
                 ),
                 IconButton(icon: const Icon(Icons.send), onPressed: () {}),

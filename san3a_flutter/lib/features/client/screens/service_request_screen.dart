@@ -3,6 +3,7 @@ import '../../../data/repositories/ai_repository.dart';
 import '../../../data/sources/remote/api_client.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class ServiceRequestScreen extends StatefulWidget {
   final String serviceId;
@@ -37,30 +38,32 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
   }
 
   void _submitRequest() {
+    final t = AppLocalizations.of(context);
     // Implement Service Request submission
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Service Request Submitted!'))
+      SnackBar(content: Text(t.translate('serviceRequestSubmitted')))
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Request')),
+      appBar: AppBar(title: Text(t.translate('createRequest'))),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Describe your problem:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(t.translate('describeYourProblem'), style: const TextStyle(fontWeight: FontWeight.bold)),
             CustomTextField(
-              label: 'Description',
+              label: t.translate('description'),
               controller: _descriptionController,
             ),
             const SizedBox(height: 16),
-            const Text('Location Details:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(t.translate('locationDetails'), style: const TextStyle(fontWeight: FontWeight.bold)),
             CustomTextField(
-              label: 'Location',
+              label: t.translate('location'),
               controller: _locationController,
             ),
             const SizedBox(height: 24),
@@ -75,11 +78,11 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.lightbulb, color: Colors.blue),
-                        SizedBox(width: 8),
-                        Text('AI Price Recommendation', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Icon(Icons.lightbulb, color: Colors.blue),
+                        const SizedBox(width: 8),
+                        Text(t.translate('aiPriceRecommendation'), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -94,7 +97,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
             ],
 
             CustomButton(
-              text: _priceRecommendation == null ? 'Get AI Price Estimate' : 'Submit Request',
+              text: _priceRecommendation == null ? t.translate('getAiPriceEstimate') : t.translate('submitRequest'),
               isLoading: _isLoadingPrice,
               onPressed: _priceRecommendation == null ? _getRecommendation : _submitRequest,
             ),
